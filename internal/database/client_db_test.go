@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"testing"
 
-	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/internal/entity"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/entity"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/suite"
 )

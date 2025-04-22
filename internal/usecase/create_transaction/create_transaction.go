@@ -1,9 +1,9 @@
 package createtransaction
 
 import (
-	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/internal/entity"
-	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/internal/gateway"
-	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/pkg/events"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/entity"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/gateway"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/pkg/events"
 )
 
 type CreateTransactionInputDTO struct {

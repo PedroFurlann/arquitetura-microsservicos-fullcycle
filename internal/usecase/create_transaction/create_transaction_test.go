@@ -3,9 +3,9 @@ package createtransaction
 import (
 	"testing"
 
-	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/internal/entity"
-	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/internal/event"
-	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/pkg/events"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/entity"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/event"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/pkg/events"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

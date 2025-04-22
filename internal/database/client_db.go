@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 
-	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/internal/entity"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/entity"
 )
 
 type ClientDB struct {

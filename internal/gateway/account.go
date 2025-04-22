@@ -1,6 +1,6 @@
 package gateway
 
-import "github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/internal/entity"
+import "github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/entity"
 
 type AccountGateway interface {
 	Save(account *entity.Account) error

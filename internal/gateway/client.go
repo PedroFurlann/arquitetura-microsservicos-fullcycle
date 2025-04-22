@@ -1,6 +1,6 @@
 package gateway
 
-import "github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/internal/entity"
+import "github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/entity"
 
 type ClientGateway interface {
 	Get(id string) (*entity.Client, error)

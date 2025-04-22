@@ -3,8 +3,8 @@ package createclient
 import (
 	"time"
 
-	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/internal/entity"
-	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore/internal/gateway"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/entity"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/gateway"
 )
 
 type CreateClientInputDTO struct {

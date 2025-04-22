@@ -1,4 +1,4 @@
-module github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/walletcore
+module github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle
 
 go 1.24.1
 
