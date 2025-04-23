@@ -1,4 +1,4 @@
-package createclient
+package create_client
 
 import (
 	"time"
@@ -35,7 +35,6 @@ func (uc *CreateClientUseCase) Execute(input CreateClientInputDTO) (*CreateClien
 	if err != nil {
 		return nil, err
 	}
-
 	err = uc.ClientGateway.Save(client)
 	if err != nil {
 		return nil, err
@@ -48,6 +47,5 @@ func (uc *CreateClientUseCase) Execute(input CreateClientInputDTO) (*CreateClien
 		CreatedAt: client.CreatedAt,
 		UpdatedAt: client.UpdatedAt,
 	}
-
 	return output, nil
 }

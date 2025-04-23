@@ -2,32 +2,35 @@ package web
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
-	createaccount "github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/usecase/create_account"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/usecase/create_account"
 )
 
 type WebAccountHandler struct {
-	CreateAccountUseCase createaccount.CreateAccountUseCase
+	CreateAccountUseCase create_account.CreateAccountUseCase
 }
 
-func NewWebAccountHandler(createAccountUseCase createaccount.CreateAccountUseCase) *WebAccountHandler {
+func NewWebAccountHandler(createAccountUseCase create_account.CreateAccountUseCase) *WebAccountHandler {
 	return &WebAccountHandler{
 		CreateAccountUseCase: createAccountUseCase,
 	}
 }
 
 func (h *WebAccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
-	var dto createaccount.CreateAccountInputDTO
+	var dto create_account.CreateAccountInputDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		fmt.Println(err)
 		return
 	}
 
 	output, err := h.CreateAccountUseCase.Execute(dto)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println(err)
 		return
 	}
 
@@ -37,6 +40,5 @@ func (h *WebAccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
 	w.WriteHeader(http.StatusCreated)
 }

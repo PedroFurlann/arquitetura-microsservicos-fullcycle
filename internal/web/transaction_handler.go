@@ -4,30 +4,31 @@ import (
 	"encoding/json"
 	"net/http"
 
-	createtransaction "github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/usecase/create_transaction"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/usecase/create_transaction"
 )
 
 type WebTransactionHandler struct {
-	CreateTransactionUseCase createtransaction.CreateTransactionUseCase
+	CreateTransactionUseCase create_transaction.CreateTransactionUseCase
 }
 
-func NewWebTransactionHandler(createTransactionUseCase createtransaction.CreateTransactionUseCase) *WebTransactionHandler {
+func NewWebTransactionHandler(createTransactionUseCase create_transaction.CreateTransactionUseCase) *WebTransactionHandler {
 	return &WebTransactionHandler{
 		CreateTransactionUseCase: createTransactionUseCase,
 	}
 }
 
 func (h *WebTransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Request) {
-	var dto createtransaction.CreateTransactionInputDTO
+	var dto create_transaction.CreateTransactionInputDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	output, err := h.CreateTransactionUseCase.Execute(dto)
+	ctx := r.Context()
+	output, err := h.CreateTransactionUseCase.Execute(ctx, dto)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
 		return
 	}
 
@@ -37,6 +38,5 @@ func (h *WebTransactionHandler) CreateTransaction(w http.ResponseWriter, r *http
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
 	w.WriteHeader(http.StatusCreated)
 }

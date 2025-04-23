@@ -1,4 +1,4 @@
-package createaccount
+package create_account
 
 import (
 	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/entity"
@@ -6,7 +6,7 @@ import (
 )
 
 type CreateAccountInputDTO struct {
-	ClientID string
+	ClientID string `json:"client_id"`
 }
 
 type CreateAccountOutputDTO struct {
@@ -18,10 +18,10 @@ type CreateAccountUseCase struct {
 	ClientGateway  gateway.ClientGateway
 }
 
-func NewCreateAccountUseCase(accountGateway gateway.AccountGateway, clientGateway gateway.ClientGateway) *CreateAccountUseCase {
+func NewCreateAccountUseCase(a gateway.AccountGateway, c gateway.ClientGateway) *CreateAccountUseCase {
 	return &CreateAccountUseCase{
-		AccountGateway: accountGateway,
-		ClientGateway:  clientGateway,
+		AccountGateway: a,
+		ClientGateway:  c,
 	}
 }
 
@@ -30,17 +30,13 @@ func (uc *CreateAccountUseCase) Execute(input CreateAccountInputDTO) (*CreateAcc
 	if err != nil {
 		return nil, err
 	}
-
 	account := entity.NewAccount(client)
-
 	err = uc.AccountGateway.Save(account)
 	if err != nil {
 		return nil, err
 	}
-
 	output := &CreateAccountOutputDTO{
 		ID: account.ID,
 	}
-
 	return output, nil
 }

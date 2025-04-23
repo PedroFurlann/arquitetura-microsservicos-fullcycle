@@ -15,43 +15,40 @@ type ClientDBTestSuite struct {
 	clientDB *ClientDB
 }
 
-func (suite *ClientDBTestSuite) SetupTest() {
+func (s *ClientDBTestSuite) SetupSuite() {
 	db, err := sql.Open("sqlite3", ":memory:")
-	suite.Nil(err)
-
-	suite.db = db
-
-	db.Exec("CREATE TABLE clients (id varchar(255), name varchar(255), email varchar(255), created_at date)")
-
-	suite.clientDB = NewClientDB(db)
+	s.Nil(err)
+	s.db = db
+	db.Exec("Create table clients (id varchar(255), name varchar(255), email varchar(255), created_at date)")
+	s.clientDB = NewClientDB(db)
 }
 
-func (suite *ClientDBTestSuite) TearDownTest() {
-	defer suite.db.Close()
-	suite.db.Exec("DROP TABLE clients")
+func (s *ClientDBTestSuite) TearDownSuite() {
+	defer s.db.Close()
+	s.db.Exec("DROP TABLE clients")
 }
 
 func TestClientDBTestSuite(t *testing.T) {
 	suite.Run(t, new(ClientDBTestSuite))
 }
 
-func (suite *ClientDBTestSuite) TestSaveClient() {
+func (s *ClientDBTestSuite) TestSave() {
 	client := &entity.Client{
-		ID:    "123",
-		Name:  "Pedro",
-		Email: "email@example.com",
+		ID:    "1",
+		Name:  "Test",
+		Email: "j@j.com",
 	}
-
-	err := suite.clientDB.Save(client)
-	suite.Nil(err)
+	err := s.clientDB.Save(client)
+	s.Nil(err)
 }
 
-func (suite *ClientDBTestSuite) TestGetClient() {
-	client, _ := entity.NewClient("Pedro", "email@example.com")
-	suite.clientDB.Save(client)
-	result, err := suite.clientDB.Get(client.ID)
-	suite.Nil(err)
-	suite.Equal(client.ID, result.ID)
-	suite.Equal(client.Name, result.Name)
-	suite.Equal(client.Email, result.Email)
+func (s *ClientDBTestSuite) TestGet() {
+	client, _ := entity.NewClient("John", "j@j.com")
+	s.clientDB.Save(client)
+
+	clientDB, err := s.clientDB.Get(client.ID)
+	s.Nil(err)
+	s.Equal(client.ID, clientDB.ID)
+	s.Equal(client.Name, clientDB.Name)
+	s.Equal(client.Email, clientDB.Email)
 }

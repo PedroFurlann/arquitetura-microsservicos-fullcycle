@@ -15,43 +15,45 @@ type AccountDBTestSuite struct {
 	client    *entity.Client
 }
 
-func (suite *AccountDBTestSuite) SetupTest() {
+func (s *AccountDBTestSuite) SetupSuite() {
 	db, err := sql.Open("sqlite3", ":memory:")
-	suite.Nil(err)
-	suite.db = db
-	db.Exec("CREATE TABLE clients (id varchar(255), name varchar(255), email varchar(255), created_at date)")
-	db.Exec("CREATE TABLE accounts (id varchar(255), client_id varchar(255), balance float, created_at date)")
-	suite.accountDB = NewAccountDB(db)
-	suite.client, _ = entity.NewClient("Pedro", "email@example.com")
+	s.Nil(err)
+	s.db = db
+	db.Exec("Create table clients (id varchar(255), name varchar(255), email varchar(255), created_at date)")
+	db.Exec("Create table accounts (id varchar(255), client_id varchar(255), balance int, created_at date)")
+	s.accountDB = NewAccountDB(db)
+	s.client, _ = entity.NewClient("John", "j@j.com")
 }
 
-func (suite *AccountDBTestSuite) TearDownTest() {
-	defer suite.db.Close()
-	suite.db.Exec("DROP TABLE clients")
-	suite.db.Exec("DROP TABLE accounts")
+func (s *AccountDBTestSuite) TearDownSuite() {
+	defer s.db.Close()
+	s.db.Exec("DROP TABLE clients")
+	s.db.Exec("DROP TABLE accounts")
 }
 
 func TestAccountDBTestSuite(t *testing.T) {
 	suite.Run(t, new(AccountDBTestSuite))
 }
 
-func (suite *AccountDBTestSuite) TestSaveAccount() {
-	account := entity.NewAccount(suite.client)
-	err := suite.accountDB.Save(account)
-	suite.Nil(err)
+func (s *AccountDBTestSuite) TestSave() {
+	account := entity.NewAccount(s.client)
+	err := s.accountDB.Save(account)
+	s.Nil(err)
 }
 
-func (suite *AccountDBTestSuite) TestAccountFindByID() {
-	suite.db.Exec("INSERT INTO clients (id, name, email, created_at) VALUES (?, ?, ?, ?)", suite.client.ID, suite.client.Name, suite.client.Email, suite.client.CreatedAt)
-	account := entity.NewAccount(suite.client)
-	err := suite.accountDB.Save(account)
-	suite.Nil(err)
-
-	result, err := suite.accountDB.FindByID(account.ID)
-	suite.Nil(err)
-	suite.Equal(account.ID, result.ID)
-	suite.Equal(account.Balance, result.Balance)
-	suite.Equal(account.Client.ID, result.Client.ID)
-	suite.Equal(account.Client.Name, result.Client.Name)
-	suite.Equal(account.Client.Email, result.Client.Email)
+func (s *AccountDBTestSuite) TestFindByID() {
+	s.db.Exec("Insert into clients (id, name, email, created_at) values (?, ?, ?, ?)",
+		s.client.ID, s.client.Name, s.client.Email, s.client.CreatedAt,
+	)
+	account := entity.NewAccount(s.client)
+	err := s.accountDB.Save(account)
+	s.Nil(err)
+	accountDB, err := s.accountDB.FindByID(account.ID)
+	s.Nil(err)
+	s.Equal(account.ID, accountDB.ID)
+	s.Equal(account.ClientID, accountDB.ClientID)
+	s.Equal(account.Balance, accountDB.Balance)
+	s.Equal(account.Client.ID, accountDB.Client.ID)
+	s.Equal(account.Client.Name, accountDB.Client.Name)
+	s.Equal(account.Client.Email, accountDB.Client.Email)
 }

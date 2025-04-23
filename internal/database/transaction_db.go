@@ -11,7 +11,9 @@ type TransactionDB struct {
 }
 
 func NewTransactionDB(db *sql.DB) *TransactionDB {
-	return &TransactionDB{DB: db}
+	return &TransactionDB{
+		DB: db,
+	}
 }
 
 func (t *TransactionDB) Create(transaction *entity.Transaction) error {
@@ -21,7 +23,6 @@ func (t *TransactionDB) Create(transaction *entity.Transaction) error {
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(transaction.ID, transaction.AccountFrom.ID, transaction.AccountTo.ID, transaction.Amount, transaction.CreatedAt)
-
 	if err != nil {
 		return err
 	}

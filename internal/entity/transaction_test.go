@@ -7,10 +7,9 @@ import (
 )
 
 func TestCreateTransaction(t *testing.T) {
-	client1, _ := NewClient("Pedro 1", "example1@email.com")
-	client2, _ := NewClient("Pedro 2", "example2@email.com")
-
+	client1, _ := NewClient("John Doe", "j@j")
 	account1 := NewAccount(client1)
+	client2, _ := NewClient("John Doe 2", "j@j2")
 	account2 := NewAccount(client2)
 
 	account1.Credit(1000)
@@ -23,21 +22,19 @@ func TestCreateTransaction(t *testing.T) {
 	assert.Equal(t, 900.0, account1.Balance)
 }
 
-func TestCreateTransactionWithInsufficientBalance(t *testing.T) {
-	client1, _ := NewClient("Pedro 1", "example1@email.com")
-	client2, _ := NewClient("Pedro 2", "example2@email.com")
-
+func TestCreateTransactionWithInsuficientBalance(t *testing.T) {
+	client1, _ := NewClient("John Doe", "j@j")
 	account1 := NewAccount(client1)
+	client2, _ := NewClient("John Doe 2", "j@j2")
 	account2 := NewAccount(client2)
 
 	account1.Credit(1000)
 	account2.Credit(1000)
 
 	transaction, err := NewTransaction(account1, account2, 2000)
-
 	assert.NotNil(t, err)
 	assert.Error(t, err, "insufficient funds")
 	assert.Nil(t, transaction)
-	assert.Equal(t, 1000.0, account1.Balance)
 	assert.Equal(t, 1000.0, account2.Balance)
+	assert.Equal(t, 1000.0, account1.Balance)
 }

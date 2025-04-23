@@ -1,57 +1,32 @@
-package createaccount
+package create_account
 
 import (
 	"testing"
 
 	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/entity"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/usecase/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
-type MockClientGateway struct {
-	mock.Mock
-}
-
-type MockAccountGateway struct {
-	mock.Mock
-}
-
-func (m *MockClientGateway) Get(id string) (*entity.Client, error) {
-	args := m.Called(id)
-	return args.Get(0).(*entity.Client), args.Error(1)
-}
-
-func (m *MockClientGateway) Save(client *entity.Client) error {
-	args := m.Called(client)
-	return args.Error(0)
-}
-
-func (m *MockAccountGateway) Save(account *entity.Account) error {
-	args := m.Called(account)
-	return args.Error(0)
-}
-
-func (m *MockAccountGateway) FindByID(id string) (*entity.Account, error) {
-	args := m.Called(id)
-	return args.Get(0).(*entity.Account), args.Error(1)
-}
-
 func TestCreateAccountUseCase_Execute(t *testing.T) {
-	client, _ := entity.NewClient("Pedro Furlan", "email@example.com")
-	clientMock := &MockClientGateway{}
+	client, _ := entity.NewClient("John Doe", "j@j")
+	clientMock := &mocks.ClientGatewayMock{}
 	clientMock.On("Get", client.ID).Return(client, nil)
 
-	accountMock := &MockAccountGateway{}
+	accountMock := &mocks.AccountGatewayMock{}
 	accountMock.On("Save", mock.Anything).Return(nil)
 
 	uc := NewCreateAccountUseCase(accountMock, clientMock)
-	output, err := uc.Execute(CreateAccountInputDTO{
+	inputDto := CreateAccountInputDTO{
 		ClientID: client.ID,
-	})
+	}
+	output, err := uc.Execute(inputDto)
 	assert.Nil(t, err)
 	assert.NotNil(t, output.ID)
+	// asssert valid uuid
 	clientMock.AssertExpectations(t)
-	clientMock.AssertNumberOfCalls(t, "Get", 1)
 	accountMock.AssertExpectations(t)
+	clientMock.AssertNumberOfCalls(t, "Get", 1)
 	accountMock.AssertNumberOfCalls(t, "Save", 1)
 }

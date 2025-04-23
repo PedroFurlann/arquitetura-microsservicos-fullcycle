@@ -4,21 +4,21 @@ import (
 	"encoding/json"
 	"net/http"
 
-	createclient "github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/usecase/create_client"
+	"github.com.br/PedroFurlann/arquitetura-microsservicos-fullcycle/internal/usecase/create_client"
 )
 
 type WebClientHandler struct {
-	CreateClientUseCase createclient.CreateClientUseCase
+	CreateClientUseCase create_client.CreateClientUseCase
 }
 
-func NewWebClientHandler(createClientUseCase createclient.CreateClientUseCase) *WebClientHandler {
+func NewWebClientHandler(createClientUseCase create_client.CreateClientUseCase) *WebClientHandler {
 	return &WebClientHandler{
 		CreateClientUseCase: createClientUseCase,
 	}
 }
 
 func (h *WebClientHandler) CreateClient(w http.ResponseWriter, r *http.Request) {
-	var dto createclient.CreateClientInputDTO
+	var dto create_client.CreateClientInputDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -37,7 +37,5 @@ func (h *WebClientHandler) CreateClient(w http.ResponseWriter, r *http.Request) 
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
 	w.WriteHeader(http.StatusCreated)
-
 }

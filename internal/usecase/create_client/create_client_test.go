@@ -1,4 +1,4 @@
-package createclient
+package create_client
 
 import (
 	"testing"
@@ -8,35 +8,34 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type MockClientGateway struct {
+type ClientGatewayMock struct {
 	mock.Mock
 }
 
-func (m *MockClientGateway) Get(id string) (*entity.Client, error) {
-	args := m.Called(id)
-	return args.Get(0).(*entity.Client), args.Error(1)
-}
-
-func (m *MockClientGateway) Save(client *entity.Client) error {
+func (m *ClientGatewayMock) Save(client *entity.Client) error {
 	args := m.Called(client)
 	return args.Error(0)
 }
 
-func TestCreateClientUseCase_Execute(t *testing.T) {
-	m := &MockClientGateway{}
-	m.On("Save", mock.Anything).Return(nil)
+func (m *ClientGatewayMock) Get(id string) (*entity.Client, error) {
+	args := m.Called(id)
+	return args.Get(0).(*entity.Client), args.Error(1)
+}
 
-	useCase := NewCreateClientUseCase(m)
-	output, err := useCase.Execute(CreateClientInputDTO{
-		Name:  "Pedro Furlan",
-		Email: "email@example.com",
+func TestCreateClientUseCase_Execute(t *testing.T) {
+	m := &ClientGatewayMock{}
+	m.On("Save", mock.Anything).Return(nil)
+	uc := NewCreateClientUseCase(m)
+
+	output, err := uc.Execute(CreateClientInputDTO{
+		Name:  "John Doe",
+		Email: "j@j",
 	})
 	assert.Nil(t, err)
 	assert.NotNil(t, output)
 	assert.NotEmpty(t, output.ID)
-	assert.Equal(t, "Pedro Furlan", output.Name)
-	assert.Equal(t, "email@example.com", output.Email)
-
+	assert.Equal(t, "John Doe", output.Name)
+	assert.Equal(t, "j@j", output.Email)
 	m.AssertExpectations(t)
 	m.AssertNumberOfCalls(t, "Save", 1)
 }
